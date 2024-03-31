@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Todo List</title>
+    <style>
+        body{
+            margin-left: 380px;
+            width: 800px;
+            background-color:#deb3ffe1;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="border: 1px solid black;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;text-align: center;border-radius: 10px;">To-Do List</h1>
+    <form action="{% url 'add_task' %}" method="post" style="text-align: center;border: 1px solid black;border-radius: 10px;">
+        {% csrf_token %}<br><br>
+        <label for="title"><b>Task:</b></label>        
+        <input type="text" name="title" placeholder="Task Title" required><br><br>
+        <label for="due_date"><b>Due Date:</b></label>     
+        <input type="date" name="due_date" required><br><br>
+        <label for="priority"><b>Priority:</b></label>  
+        <select name="priority">
+            <option value="1">Low</option>
+            <option value="2">Medium</option>
+            <option value="3">High</option>
+        </select><br><br>
+        <button type="submit">Add Task</button><br><br>
+    </form>
+    <h1 style="border: 1px solid black;border-radius: 10px;text-align: center;">TASKS</h1>
+    <ul style="border: 1px solid black;border-radius: 10px;">
+        {% for task in tasks %}
+            <li>
+                {{ task.title }} - Due: {{ task.due_date }} - Priority: {{ task.get_priority_display }}
+                {% if not task.completed %}
+                    <a href="{% url 'remove_task' task.id %}"><button  onclick="alert('Task deleted successfully')">Remove</button></a>
+                    <a href="{% url 'mark_as_completed' task.id %}"><button onclick="alert('Task completed successfully')" >Mark as Completed</button></a>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+    <h1 style="border: 1px solid black;border-radius: 10px;text-align: center;">Marked as Completed</h1>
+    <ul style="border: 1px solid black;border-radius: 10px;">
+        {% for task in completed_tasks %}
+            <li >
+                {{ task.title }} - Due: {{ task.due_date }} - Priority: {{ task.get_priority_display }}
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
